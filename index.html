@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Pembelajaran: Ikatan Kovalen</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a3a, #2c3e50);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .scene {
+            display: none;
+            width: 100%;
+            min-height: 100vh;
+            padding: 20px;
+            animation: fadeIn 0.8s ease;
+        }
+        
+        .scene.active {
+            display: block;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--secondary);
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--light);
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            margin: 10px 5px;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+        
+        .btn-accent {
+            background: var(--accent);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+        
+        .btn-accent:hover {
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .atom-animation {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+        
+        .nucleus {
+            width: 40px;
+            height: 40px;
+            background: var(--accent);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 20px var(--accent);
+        }
+        
+        .electron {
+            width: 15px;
+            height: 15px;
+            background: var(--secondary);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px var(--secondary);
+            animation: orbit 4s linear infinite;
+        }
+        
+        .electron:nth-child(2) {
+            animation-delay: -2s;
+        }
+        
+        .student-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .student-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .student-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+        
+        .student-item.checked {
+            background: rgba(46, 204, 113, 0.3);
+            border: 1px solid var(--success);
+        }
+        
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .menu-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px 20px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-10px);
+            border-color: var(--secondary);
+        }
+        
+        .menu-item i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--secondary);
+        }
+        
+        .question-list {
+            margin: 20px 0;
+            padding-left: 20px;
+        }
+        
+        .question-list li {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .simulation-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .observation-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .observation-table th, .observation-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .observation-table th {
+            background: rgba(52, 152, 219, 0.3);
+        }
+        
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            margin-bottom: 15px;
+            resize: vertical;
+        }
+        
+        textarea::placeholder, input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .conclusion-box {
+            background: rgba(46, 204, 113, 0.2);
+            border: 1px solid var(--success);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .timer {
+            background: rgba(231, 76, 60, 0.3);
+            padding: 10px 20px;
+            border-radius: 50px;
+            display: inline-block;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        
+        .oxygen-molecule {
+            width: 120px;
+            height: 120px;
+            margin: 20px auto;
+            position: relative;
+            animation: pulse 2s infinite;
+        }
+        
+        .oxygen-atom {
+            width: 50px;
+            height: 50px;
+            background: rgba(231, 76, 60, 0.7);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 0 15px rgba(231, 76, 60, 0.7);
+        }
+        
+        .oxygen-atom:nth-child(1) {
+            left: 10px;
+        }
+        
+        .oxygen-atom:nth-child(2) {
+            right: 10px;
+        }
+        
+        .bond {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 4px;
+            background: var(--secondary);
+            transform: translate(-50%, -50%);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes orbit {
+            0% { transform: translate(-50%, -50%) rotate(0deg) translateX(80px) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg) translateX(80px) rotate(-360deg); }
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .blink {
+            animation: blink 2s infinite;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .student-list {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Scene 1: Pembuka -->
+    <section id="scene1" class="scene active">
+        <div class="container">
+            <div class="header">
+                <div class="atom-animation">
+                    <div class="nucleus"></div>
+                    <div class="electron"></div>
+                    <div class="electron"></div>
+                </div>
+                <h1>IKATAN KOVALEN</h1>
+                <p>Media Pembelajaran Interaktif</p>
+                <p>Model Inquiry Learning dengan Simulasi Digital</p>
+            </div>
+            
+            <div class="card">
+                <h2>Selamat Datang, Ilmuwan Muda!</h2>
+                <p>Dalam pembelajaran ini, kita akan menjelajahi dunia mikroskopis ikatan kimia dan menyelidiki rahasia di balik ikatan kovalen.</p>
+                <p>Bersiaplah untuk menjadi detektif molekuler dan memecahkan misteri bagaimana atom-atom berikatan!</p>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn" onclick="switchScene(2)">Mulai Pembelajaran <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>Informasi Pembelajaran</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+                    <div><strong>Pengajar:</strong> Al Amin</div>
+                    <div><strong>Topik:</strong> Ikatan Kovalen</div>
+                    <div><strong>Waktu:</strong> 60 Menit</div>
+                    <div><strong>Kelas:</strong> XI IPA</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Scene 2: Absen -->
+    <section id="scene2" class="scene">
+        <div class="container">
+            <div class="header">
+                <h1>Daftar Hadir</h1>
+                <p>Kelas XI IPA - Kimia</p>
+            </div>
+            
+            <div class="card">
+                <h3>Absensi Peserta Didik</h3>
+                <p>Silakan centang nama Anda saat hadir:</p>
+                
+                <div class="student-list" id="studentList">
+                    <!-- Student list will be populated by JavaScript -->
+                </div>
+                
+                <div class="navigation">
+                    <button class="btn" onclick="switchScene(1)"><i class="fas fa-arrow-left"></i> Kembali</button>
+                    <button class="btn" onclick="switchScene(3)">Lanjut <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Scene 3: Menu -->
+    <section id="scene3" class="scene">
+        <div class="container">
+            <div class="header">
+                <h1>Peta Pembelajaran</h1>
+                <p>Pilih tahapan penyelidikan yang ingin dijelajahi</p>
+            </div>
+            
+            <div class="menu-grid">
+                <div class="menu-item" onclick="switchScene(4)">
+                    <i class="fas fa-compass"></i>
+                    <h3>Orientasi</h3>
+                    <p>Memahami fenomena dan merumuskan masalah</p>
+                </div>
+                
+                <div class="menu-item" onclick="switchScene(5)">
+                    <i class="fas fa-question-circle"></i>
+                    <h3>Merumuskan Masalah</h3>
+                    <p>Menyusun pertanyaan penelitian</p>
+                </div>
+                
+                <div class="menu-item" onclick="switchScene(6)">
+                    <i class="fas fa-clipboard-list"></i>
+                    <h3>Merencanakan Penyelidikan</h3>
+                    <p>Menyusun langkah-langkah penelitian</p>
+                </div>
+                
+                <div class="menu-item" onclick="switchScene(7)">
+                    <i class="fas fa-flask"></i>
+                    <h3>Melakukan Penyelidikan</h3>
+                    <p>Eksperimen dengan simulasi digital</p>
+                </div>
+                
+                <div class="menu-item" onclick="switchScene(8)">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Menganalisis & Menyimpulkan</h3>
+                    <p>Mengolah data dan menarik kesimpulan</p>
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn" onclick="switchScene(2)"><i class="fas fa-arrow-left"></i> Kembali</button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Scene 4: Orientasi -->
+    <section id="scene4" class="scene">
+        <div class="container">
+            <div class="header">
+                <h1>Orientasi</h1>
+                <p>Memahami Fenomena Ikatan Kovalen</p>
+            </div>
+            
+            <div class="card">
+                <h2>Fenomena Menarik</h2>
+                <div class="oxygen-molecule blink">
+                    <div class="oxygen-atom"></div>
+                    <div class="oxygen-atom"></div>
+                    <div class="bond"></div>
+                </div>
+                
+                <p style="text-align: center; font-size: 1.2rem; margin: 20px 0;">
+                    <strong>Pernahkah kalian bertanya...</strong>
+                </p>
+                
+                <div class="card" style="background: rgba(52, 152, 219, 0.2); border-left: 5px solid var(--secondary);">
+                    <p style="font-size: 1.3rem; line-height: 1.8;">
+                        Mengapa oksigen (O<sub>2</sub>) yang kita hirup tersusun dari 2 atom?<br>
+                        Bagaimana atom-atom yang sama-sama bermuatan negatif bisa bersatu membentuk molekul?
+                    </p>
+                </div>
+                
+                <div style="margin-top: 30px;">
+                    <p><strong>Petunjuk:</strong> Bersiaplah untuk menyelidiki misteri ikatan kimia melalui simulasi digital!</p>
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn" onclick="switchScene(3)"><i class="fas fa-arrow-left"></i> Kembali</button>
+                <button class="btn" onclick="switchScene(5)">Lanjut <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Scene 5: Merumuskan Masalah -->
+    <section id="scene5" class="scene">
+        <div class="container">
+            <div class="header">
+                <h1>Merumuskan Masalah</h1>
+                <p>Menyusun Pertanyaan Penelitian</p>
+            </div>
+            
+            <div class="card">
+                <h2>Mari Merumuskan Pertanyaan!</h2>
+                
+                <div class="question-list">
+                    <ol>
+                        <li>Bagaimana proses terbentuknya ikatan pada molekul H<sub>2</sub>, O<sub>2</sub>, dan N<sub>2</sub>?</li>
+                        <li>Berapa banyak pasangan elektron yang digunakan bersama pada masing-masing molekul?</li>
+                        <li>Apa hubungan antara jumlah pasangan elektron dengan kekuatan ikatan?</li>
+                    </ol>
+                </div>
+                
+                <div class="card" style="background: rgba(46, 204, 113, 0.2);">
+                    <h3>Instruksi:</h3>
+                    <p>Diskusikan dengan kelompokmu dan tuliskan dugaan sementara (hipotesis) di LKPD digital!</p>
+                    
+                    <textarea placeholder="Tuliskan hipotesis Anda di sini..." rows="4"></textarea>
+                    
+                    <button class="btn" onclick="playSound('paper')"><i class="fas fa-save"></i> Simpan Hipotesis</button>
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn" onclick="switchScene(4)"><i class="fas fa-arrow-left"></i> Kembali</button>
+                <button class="btn" onclick="switchScene(6)">Lanjut <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Scene 6: Merencanakan Penyelidikan -->
+    <section id="scene6" class="scene">
+        <div class="container">
+            <div class="header">
+                <h1>Merencanakan Penyelidikan</h1>
+                <p>Menyusun Rencana Penelitian</p>
+            </div>
+            
+            <div class="card">
+                <h2>Rencana Penyelidikan Kita</h2>
+                
+                <div class="card" style="background: rgba(52, 152, 219, 0.2);">
+                    <h3>Langkah-langkah:</h3>
+                    <ol class="question-list">
+                        <li>Buka simulasi PhET "Build a Molecule"</li>
+                        <li>Bentuk molekul: H<sub>2</sub>, O<sub>2</sub>, dan N<sub>2</sub></li>
+                        <li>Amati jumlah pasangan elektron yang digunakan bersama</li>
+                        <li>Catat hasil pengamatan dalam tabel</li>
+                    </ol>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <h3>Tips:</h3>
+                    <p>Perhatikan baik-baik bagaimana elektron-elektron berperilaku saat atom-atom saling mendekat!</p>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-accent" onclick="openSimulation()"><i class="fas fa-external-link-alt"></i> Buka Simulasi PhET</button>
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn" onclick="switchScene(5)"><i class="fas fa-arrow-left"></i> Kembali</button>
+                <button class="btn" onclick="switchScene(7)">Lanjut <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Scene 7: Melakukan Penyelidikan -->
+    <section id="scene7" class="scene">
+        <div class="container">
+            <div class="header">
+                <h1>Melakukan Penyelidikan</h1>
+                <p>Eksperimen dengan Simulasi Digital</p>
+            </div>
+            
+            <div class="card">
+                <h2>Waktunya Menyelidiki!</h2>
+                
+                <div class="timer">
+                    <i class="fas fa-clock"></i> Waktu Penyelidikan: <span id="countdown">25:00</span>
+                </div>
+                
+                <div class="simulation-container">
+                    <h3>Panduan Pengamatan:</h3>
+                    
+                    <table class="observation-table">
+                        <thead>
+                            <tr>
+                                <th>Molekul</th>
+                                <th>Yang Diamati</th>
+                                <th>Hasil Pengamatan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>H<sub>2</sub></strong></td>
+                                <td>
+                                    - Jumlah elektron yang berikatan<br>
+                                    - Perilaku atom saat berikatan
+                                </td>
+                                <td><input type="text" placeholder="Tulis hasil pengamatan..."></td>
+                            </tr>
+                            <tr>
+                                <td><strong>O<sub>2</sub></strong></td>
+                                <td>
+                                    - Perbedaan dengan H<sub>2</sub><br>
+                                    - Jumlah pasangan elektron
+                                </td>
+                                <td><input type="text" placeholder="Tulis hasil pengamatan..."></td>
+                            </tr>
+                            <tr>
+                                <td><strong>N<sub>2</sub></strong></td>
+                                <td>
+                                    - Kekuatan ikatan<br>
+                                    - Pola pembentukan ikatan
+                                </td>
+                                <td><input type="text" placeholder="Tulis hasil pengamatan..."></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="card" style="background: rgba(231, 76, 60, 0.2);">
+                    <h3>Pertanyaan Pemandu Selama Investigasi:</h3>
+                    <ul class="question-list">
+                        <li>Apa yang terjadi ketika dua atom Hidrogen didekatkan?</li>
+                        <li>Mengapa ikatan N<sub>2</sub> lebih kuat daripada O<sub>2</sub>?</li>
+                    </ul>
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn" onclick="playSound('data')"><i class="fas fa-save"></i> Simpan Pengamatan</button>
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn" onclick="switchScene(6)"><i class="fas fa-arrow-left"></i> Kembali</button>
+                <button class="btn" onclick="switchScene(8)">Lanjut <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Scene 8: Menganalisis & Menyimpulkan -->
+    <section id="scene8" class="scene">
+        <div class="container">
+            <div class="header">
+                <h1>Menganalisis & Menyimpulkan</h1>
+                <p>Mengolah Data dan Menarik Kesimpulan</p>
+            </div>
+            
+            <div class="card">
+                <h2>Template Laporan</h2>
+                
+                <div class="card">
+                    <h3>HASIL PENGAMATAN:</h3>
+                    
+                    <table class="observation-table">
+                        <thead>
+                            <tr>
+                                <th>Molekul</th>
+                                <th>Jumlah Pasangan Elektron</th>
+                                <th>Jenis Ikatan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>H<sub>2</sub></strong></td>
+                                <td><input type="text" placeholder="Isi berdasarkan pengamatan"></td>
+                                <td><input type="text" placeholder="Isi berdasarkan pengamatan"></td>
+                            </tr>
+                            <tr>
+                                <td><strong>O<sub>2</sub></strong></td>
+                                <td><input type="text" placeholder="Isi berdasarkan pengamatan"></td>
+                                <td><input type="text" placeholder="Isi berdasarkan pengamatan"></td>
+                            </tr>
+                            <tr>
+                                <td><strong>N<sub>2</sub></strong></td>
+                                <td><input type="text" placeholder="Isi berdasarkan pengamatan"></td>
+                                <td><input type="text" placeholder="Isi berdasarkan pengamatan"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="conclusion-box">
+                    <h3>KESIMPULAN:</h3>
+                    
+                    <div style="margin: 15px 0;">
+                        <p>1. Ikatan kovalen adalah...</p>
+                        <textarea placeholder="Tuliskan definisi ikatan kovalen berdasarkan hasil investigasi..." rows="2"></textarea>
+                    </div>
+                    
+                    <div style="margin: 15px 0;">
+                        <p>2. Jenis-jenis ikatan kovalen berdasarkan jumlah pasangan elektron...</p>
+                        <textarea placeholder="Jelaskan jenis-jenis ikatan kovalen yang ditemukan..." rows="2"></textarea>
+                    </div>
+                    
+                    <div style="margin: 15px 0;">
+                        <p>3. Hubungan jumlah pasangan elektron dengan kekuatan ikatan...</p>
+                        <textarea placeholder="Jelaskan hubungan yang ditemukan..." rows="2"></textarea>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn" onclick="playSound('success')"><i class="fas fa-file-pdf"></i> Download Laporan PDF</button>
+                    <button class="btn btn-accent" onclick="playSound('success')"><i class="fas fa-paper-plane"></i> Kirim Laporan</button>
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn" onclick="switchScene(7)"><i class="fas fa-arrow-left"></i> Kembali</button>
+                <button class="btn" onclick="switchScene(1)">Selesai <i class="fas fa-check"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Audio Elements -->
+    <audio id="beepSound" src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3"></audio>
+    <audio id="whooshSound" src="https://assets.mixkit.co/sfx/preview/mixkit-whoosh-1126.mp3"></audio>
+    <audio id="breathSound" src="https://assets.mixkit.co/sfx/preview/mixkit-breathing-1353.mp3"></audio>
+    <audio id="electronSound" src="https://assets.mixkit.co/sfx/preview/mixkit-sci-fi-buzz-2309.mp3"></audio>
+    <audio id="paperSound" src="https://assets.mixkit.co/sfx/preview/mixkit-paper-rumble-2334.mp3"></audio>
+    <audio id="pencilSound" src="https://assets.mixkit.co/sfx/preview/mixkit-pencil-on-paper-2328.mp3"></audio>
+    <audio id="computerSound" src="https://assets.mixkit.co/sfx/preview/mixkit-computer-system-fail-2903.mp3"></audio>
+    <audio id="clickSound" src="https://assets.mixkit.co/sfx/preview/mixkit-electronic-retro-block-hit-2185.mp3"></audio>
+    <audio id="bondingSound" src="https://assets.mixkit.co/sfx/preview/mixkit-sci-fi-bleep-2310.mp3"></audio>
+    <audio id="dataSound" src="https://assets.mixkit.co/sfx/preview/mixkit-typing-keyboard-tap-1329.mp3"></audio>
+    <audio id="successSound" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3"></audio>
+
+    <script>
+        // Data siswa
+        const students = [
+            "Ahmad Fauzi", "Budi Santoso", "Citra Dewi", "Dian Pratama", "Eka Wulandari",
+            "Fajar Nugroho", "Gita Maharani", "Hendra Setiawan", "Indah Permata", "Joko Widodo",
+            "Kartika Sari", "Lukman Hakim", "Maya Sari", "Nova Pratama", "Oki Setiawan"
+        ];
+        
+        // Fungsi untuk berpindah scene
+        function switchScene(sceneNumber) {
+            // Sembunyikan semua scene
+            document.querySelectorAll('.scene').forEach(scene => {
+                scene.classList.remove('active');
+            });
+            
+            // Tampilkan scene yang dipilih
+            document.getElementById(`scene${sceneNumber}`).classList.add('active');
+            
+            // Jika pindah ke scene 2 (absen), isi daftar siswa
+            if (sceneNumber === 2) {
+                populateStudentList();
+            }
+            
+            // Jika pindah ke scene 3 (menu), mainkan suara whoosh
+            if (sceneNumber === 3) {
+                playSound('whoosh');
+            }
+            
+            // Jika pindah ke scene 4 (orientasi), mainkan suara napas dan elektron
+            if (sceneNumber === 4) {
+                playSound('breath');
+                setTimeout(() => playSound('electron'), 500);
+            }
+            
+            // Jika pindah ke scene 5 (merumuskan masalah), mainkan suara kertas dan pensil
+            if (sceneNumber === 5) {
+                playSound('paper');
+                setTimeout(() => playSound('pencil'), 300);
+            }
+            
+            // Jika pindah ke scene 6 (merencanakan), mainkan suara komputer dan klik
+            if (sceneNumber === 6) {
+                playSound('computer');
+                setTimeout(() => playSound('click'), 500);
+            }
+            
+            // Jika pindah ke scene 7 (penyelidikan), mainkan suara ikatan dan data
+            if (sceneNumber === 7) {
+                playSound('bonding');
+                setTimeout(() => playSound('data'), 500);
+                startTimer(25 * 60); // 25 menit
+            }
+            
+            // Jika pindah ke scene 8 (kesimpulan), mainkan suara kertas dan sukses
+            if (sceneNumber === 8) {
+                playSound('paper');
+                setTimeout(() => playSound('success'), 1000);
+            }
+        }
+        
+        // Fungsi untuk mengisi daftar siswa
+        function populateStudentList() {
+            const studentList = document.getElementById('studentList');
+            studentList.innerHTML = '';
+            
+            students.forEach(student => {
+                const studentItem = document.createElement('div');
+                studentItem.className = 'student-item';
+                studentItem.innerHTML = `
+                    <i class="fas fa-user-graduate"></i>
+                    <p>${student}</p>
+                `;
+                
+                studentItem.addEventListener('click', function() {
+                    this.classList.toggle('checked');
+                    playSound('beep');
+                });
+                
+                studentList.appendChild(studentItem);
+            });
+        }
+        
+        // Fungsi untuk membuka simulasi PhET
+        function openSimulation() {
+            playSound('click');
+            window.open('https://phet.colorado.edu/sims/html/build-a-molecule/latest/build-a-molecule_in.html', '_blank');
+        }
+        
+        // Timer untuk fase penyelidikan
+        let countdownInterval;
+        
+        function startTimer(duration) {
+            let timer = duration;
+            const countdownElement = document.getElementById('countdown');
+            
+            clearInterval(countdownInterval);
+            
+            countdownInterval = setInterval(function() {
+                const minutes = Math.floor(timer / 60);
+                const seconds = timer % 60;
+                
+                countdownElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (--timer < 0) {
+                    clearInterval(countdownInterval);
+                    countdownElement.textContent = "Waktu Habis!";
+                    countdownElement.style.color = "var(--accent)";
+                    playSound('success');
+                }
+            }, 1000);
+        }
+        
+        // Fungsi untuk memainkan suara
+        function playSound(soundType) {
+            const soundMap = {
+                'beep': document.getElementById('beepSound'),
+                'whoosh': document.getElementById('whooshSound'),
+                'breath': document.getElementById('breathSound'),
+                'electron': document.getElementById('electronSound'),
+                'paper': document.getElementById('paperSound'),
+                'pencil': document.getElementById('pencilSound'),
+                'computer': document.getElementById('computerSound'),
+                'click': document.getElementById('clickSound'),
+                'bonding': document.getElementById('bondingSound'),
+                'data': document.getElementById('dataSound'),
+                'success': document.getElementById('successSound')
+            };
+            
+            if (soundMap[soundType]) {
+                soundMap[soundType].currentTime = 0;
+                soundMap[soundType].play().catch(e => console.log('Audio play failed:', e));
+            }
+        }
+        
+        // Inisialisasi
+        document.addEventListener('DOMContentLoaded', function() {
+            // Preload semua suara
+            Object.values(document.getElementsByTagName('audio')).forEach(audio => {
+                audio.load();
+            });
+            
+            // Efek suara untuk navigasi
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    playSound('click');
+                });
+            });
+            
+            // Efek suara untuk menu items
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    playSound('whoosh');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
